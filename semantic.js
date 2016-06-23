@@ -4,22 +4,11 @@ var actionables = require('./actionable.js').actionables;
 var fs = require('fs');
 var _ = require('lodash');
 var util = require('./util.js').util;
-var stringUtil = require('util');
+var messages = require('./messages.js').messages;
 
 var actions = {
   'drinks' : 'DRINKABLE',
   'eats' : 'EDIBLE'
-}
-
-var messages = {
-    'ACTIONABLE': {
-      true : function() {
-          return 'success';
-      },
-      false : function(action, actionable) {
-          return stringUtil.format("%s can not be performed on %s", action, actionable);
-      }
-    }
 }
 
 var readFile = function(fileName) {
@@ -27,7 +16,7 @@ var readFile = function(fileName) {
 }
 
 var splitFile = function(content) {
-  return _.dropRight(content.split('\n'), 1);
+  return _.dropRight(content.split('\n'));
 }
 
 var parseInput = function(sentences) {
@@ -51,7 +40,8 @@ var verifyChild = function(node) {
   return {
     'node' : node,
     'isValid' : Boolean(isValidActionTaken),
-    'message' : util.evalNestedValue(messages, ['ACTIONABLE', Boolean(isValidActionTaken)])(zipedObject['ACTION'], _.valuesIn(zipedObject['ACTIONABLE']))
+    'message' : util.evalNestedValue(messages, ['ACTIONABLE', Boolean(isValidActionTaken)])
+      (zipedObject['ACTION'], _.valuesIn(zipedObject['ACTIONABLE']))
   };
 }
 
@@ -72,7 +62,7 @@ var semanticChecker = function(inputFile) {
   var semanticErrors = semanticChecked.filter(function(aCheckedNode) {
     return !aCheckedNode['isValid'];
   })
-  return _.first(semanticErrors)['message'] || 'success';
+  return semanticErrors.length ? _.first(semanticErrors)['message'] : 'success';
 }
 
 exports.semanticChecker = semanticChecker;

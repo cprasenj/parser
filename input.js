@@ -1,4 +1,4 @@
 Ram drinks tea.
 Sam drinks coffee.
-Jadu eats coffee.
-Ram drinks rice.
+Jadu eats rice.
+Ram drinks coffee.
