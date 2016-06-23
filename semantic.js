@@ -30,13 +30,13 @@ var isValidAction = function(action, actionable) {
 }
 
 var verifyChild = function(node) {
-  var collectedObject = node.reduce(function(result, child) {
+  var collected = node.reduce(function(result, child) {
     return _.mergeWith(result, child, function(val1, val2) {
       return _.flatten([val1, val2]);
     });
   });
-  var zipedObject = _.zipObject(collectedObject['header'], collectedObject['child']);
-  var isValidActionTaken = isValidAction(zipedObject['ACTION'], zipedObject['ACTIONABLE']);
+  var ziped = _.zipObject(collected['header'], collected['child']);
+  var isValidActionTaken = isValidAction(ziped['ACTION'], ziped['ACTIONABLE']);
   return {
     'node' : node,
     'isValid' : Boolean(isValidActionTaken),
